@@ -42,19 +42,17 @@ string SERVICE::to_string(char *c) {
 }
 
 void SERVICE::install() {
-	SERVICE::bash_run("sudo cp tolink /usr/bin");
+	SERVICE::bash_run("sudo cp ./tolink /usr/bin");
 	string c;
 	cout << "Do you want to alias 'tolink' to 'to'? (y/n) ";
 	cin >> c;
-	if (c != "y" || c != "Y") return ;
-	if (SERVICE::check_path("~/.zshrc"))
-		SERVICE::bash_run("echo 'alias to=\"tolink\"' >> ~/.zshrc");
-	if (SERVICE::check_path("~/.bashrc"))
-		SERVICE::bash_run("echo 'alias to=\"tolink\"' >> ~/.bashrc");
+	if (c != "y" && c != "Y") return ;
+	SERVICE::bash_run("sudo cp ./tolink /usr/bin/to");
 }
 
 void SERVICE::uninstall() {
 	SERVICE::bash_run("sudo rm /usr/bin/tolink");
+	SERVICE::bash_run("sudo rm /usr/bin/to");
 }
 
 int SERVICE::edit_distance(string a, string b) {
