@@ -183,12 +183,14 @@ int PROGRAM::get_id(string s) {
 		res = stoi(s);
 		if (res >= (int) PROGRAM::link.size()) PROGRAM::show_wrong(5);
 	} else {
-		int maxSame = 0;
+		int bestMatch = INF;
 		rep(i, 0, PROGRAM::link.size() - 1) {
 			Link t = PROGRAM::link.at(i);
-			int tSame = SERVICE::common_substring(t.name, s);
-			if (tSame > maxSame) maxSame = tSame, res = i;
+			int tMatch = SERVICE::edit_distance(s, t.name);
+			if (tMatch == (int) t.name.size()) continue;
+			if (tMatch < bestMatch) bestMatch = tMatch, res = i;
 		}
+		if (bestMatch == INF) PROGRAM::show_wrong(5);
 	}
 	return res;
 }
