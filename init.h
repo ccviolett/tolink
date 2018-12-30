@@ -2,6 +2,7 @@
 #include <bits/stdc++.h>
 
 using namespace std;
+const int INF = 0x7fffffff;
 
 const string Error[10] = {
 	/* Error infor {{{ */

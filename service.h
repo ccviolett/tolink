@@ -11,7 +11,7 @@ namespace SERVICE {
 	void uninstall(); // Uninstall the application from the computer
 	bool check_path(string); // Check if there is the designated path.
 	bool check_address(string); // Check if it is a legal website address.
-	int common_substring(string, string); // Find the len of longest common substring
+	int edit_distance(string, string); // The edit distance between two string.
 	string to_string(char *); // Trun char array to string
 	string expand_user(string); // Expand '~' to the home path.
 }
@@ -57,16 +57,27 @@ void SERVICE::uninstall() {
 	SERVICE::bash_run("sudo rm /usr/bin/tolink");
 }
 
-int SERVICE::common_substring(string a, string b) {
-	a.push_back('#'), b.push_back('#');
-	int res = 0, t = 0, last = 0;
-	for (int i = 0; i < (int) b.size(); i++) {
-		if (a.at(t) == b.at(i)) {
-			res -= i - last;
-			last = i;
-			t++;
+int SERVICE::edit_distance(string a, string b) {
+	vector<vector<int>>d;
+	vector<int>t;
+	t.push_back(0);
+	for (int i = 0; i < (int) b.size(); i++) t.push_back(i + 1);
+	d.push_back(t);
+	for (int i = 0; i < (int) a.size(); i++) {
+		t.clear(); t.push_back(i + 1);
+		for (int j = 0; j < (int) b.size(); j++) {
+			if (a.at(i) == b.at(j)) t.push_back(d.at(i).at(j));
+			else t.push_back(min(min(d.at(i).at(j + 1), t.back()), d.at(i).at(j)) + 1);
 		}
+		d.push_back(t);
 	}
-	return res + t * b.size();
+	/* for (int i = 0; i < (int) d.size(); i++) { */
+	/* 	t = d.at(i); */
+	/* 	for (int j = 0; j < (int) t.size(); j++) cout << t.at(j) << " "; */
+	/* 	cout << endl; */
+	/* } */
+	/* cout << a << " " << b << endl; */
+	/* cout << d.at(a.size()).at(b.size()) << endl; */
+	return d.at(a.size()).at(b.size());
 }
 /* }}} */
