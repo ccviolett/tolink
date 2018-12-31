@@ -80,6 +80,7 @@ bool PROGRAM::start_test(void) {
 	PROGRAM::open_web("https://www.samcompu.com");
 	cout << "Have you open 'https://www.samcompu.com'? (y/n) ";
 	cin >> c;
+	cin.ignore();
 	return c != "n";
 }
 
@@ -89,14 +90,17 @@ void PROGRAM::welcome(void) {
 	while (c == "n") {
 		cout << "Please set your defult browser first: ";
 		cin >> PROGRAM::defaltBrowser;
+		cin.ignore();
 		cout << "Now start your defult browser for checking if is useable." << endl;
 		cout << "Type 'y' for starting checking or 'n' for changing defult browser:";
 		cin >> c;
+		cin.ignore();
 	}
 	while (!PROGRAM::start_test()) {
 		cout << "Sorry about that! It means 'tolink' doesn't support this browser." << endl;
 		cout << "Please set another browser: ";
 		cin >> PROGRAM::defaltBrowser;
+		cin.ignore();
 	}
 	cout << "Congratulations! You can't use 'tolink' now!" << endl << endl;
 }
@@ -119,11 +123,13 @@ void PROGRAM::add_link(Link t) {
 	if (t.name == "") {
 		cout << "Link name: ";
 		cin >> t.name;
+		cin.ignore();
 	}
 	PROGRAM::check_name(t.name);
 	if (t.path == "") {
 		cout << "Link path: ";
 		cin >> t.path;
+		cin.ignore();
 	}
 	if (!SERVICE::check_address(t.path)) PROGRAM::show_wrong(4);
 	PROGRAM::link.push_back(t); }
@@ -166,8 +172,9 @@ void PROGRAM::list_link() {
 		if (i && !(i % 10)) {
 			cout << "Continue? ([y]/n) ";
 			char c = SERVICE::read_single_char();
-			if (c && c != 'y' && c != 'Y') break;
-			cout << "\033[1A"; // Move the mouse to the begining of line.
+			if (c != 'n' && c != 'N') cout << "\033[1A"; 
+			// Move the mouse to the begining of line.
+			else break;
 		}
 		Link t = PROGRAM::link.at(i);
 		cout << "  " << i << "  " << t.name << "  " << t.path << endl;
@@ -179,12 +186,14 @@ void PROGRAM::del_link(string s) {
 	if (s == "") {
 		cout << "Pleace enter the id or name of the link: ";
 		cin >> s;
+		cin.ignore();
 	}
 	Link &t = PROGRAM::link.at(PROGRAM::get_id(s));
-	string c;
-	cout << "Do you want delete '" << t.name << "'? (y/n) ";
-	cin >> c;
-	if (c == "y" || c == "Y") t.deleted = true;
+	cout << "Do you want delete '" << t.name << "'? (y/[n]) ";
+	char c = SERVICE::read_single_char();
+	if (c != 'y' && c != 'Y') return ;
+	t.deleted = true;
+	cout << "Link has deleted." << endl;
 }
 
 int PROGRAM::get_id(string s) {
@@ -217,6 +226,7 @@ void PROGRAM::change_browser(string s) {
 	if (s == "") {
 		cout << "Please enter the browser you want to change to: ";
 		cin >> s;
+		cin.ignore();
 	}
 	PROGRAM::defaltBrowser = s;
 }
@@ -234,10 +244,9 @@ void PROGRAM::open_link(string s) {
 		PROGRAM::open_web(s);
 		int id = PROGRAM::find_link(s);
 		if (id == -1) {
-			string c;
-			cout << "You haven't saved this link before. Save it? (y/n) ";
-			cin >> c;
-			if (c != "n") PROGRAM::add_link((Link) {false, "", s});
+			cout << "You haven't saved this link before. Save it? ([y]/n) ";
+			char c = SERVICE::read_single_char();
+			if (c != 'n' && c != 'N') PROGRAM::add_link((Link) {false, "", s});
 		} else {
 			Link t = PROGRAM::link.at(id);
 			cout << "You have saved this link before." << endl << "You can use 'tolink " << t.name << "' to open it next time.";
@@ -247,23 +256,26 @@ void PROGRAM::open_link(string s) {
 }
 
 void PROGRAM::change_name(int id, string s) {
-	string c;
 	if (id == -1) {
 		cout << "The id or the name of the link: ";
-		cin >> c;
-		id = PROGRAM::get_id(c);
+		string tmp;
+		cin >> tmp;
+		cin.ignore();
+		id = PROGRAM::get_id(tmp);
 	}
 	Link &t = PROGRAM::link.at(id);
 	if (s == "") {
 		cout << "New name of the link: ";
 		cin >> s;
+		cin.ignore();
 	}
 	PROGRAM::check_name(s);
 	cout << "What you change is this:" << endl << "  [" << t.name << "->" << s << "]  " << t.path << endl;
-	cout << "Continue? (y/n) ";
-	cin >> c;
-	if (c == "n") return ;
+	cout << "Continue? (y/[n]) ";
+	char c = SERVICE::read_single_char();
+	if (c != 'y' && c != 'Y') return ;
 	t.name = s;
+	cout << "Link name has changed." << endl;
 }
 
 void PROGRAM::check_name(string s) {
@@ -290,6 +302,7 @@ void PROGRAM::search_link(string s) {
 	if (s == "") {
 		cout << "Search Key: ";
 		cin >> s;
+		cin.ignore();
 	}
 	priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>> >aboutLink;
 	for (int i = 0; i < (int) PROGRAM::link.size(); i++) {
@@ -306,10 +319,9 @@ void PROGRAM::search_link(string s) {
 		cout << "  " << f.second << "  ", SERVICE::match_print(t.name, s), cout << " " << t.path << endl;
 		resultNum++;
 		if (resultNum == 10) {
-			string c;
-			cout << "Continue? (y/n) ";
-			cin >> c;
-			if (c != "y" && c != "Y") break;
+			cout << "Continue? ([y]/n) ";
+			char c = SERVICE::read_single_char();
+			if (c != 'n' && c != 'N') break;
 			cout << "\033[1A"; // Move the mouse to the begining of line.
 			resultNum = 0;
 		}
