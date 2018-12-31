@@ -165,6 +165,8 @@ void PROGRAM::list_link() {
 	for (int i = 0; i < (int) PROGRAM::link.size(); i++) {
 		Link t = PROGRAM::link.at(i);
 		cout << "  " << i << "  " << t.name << "  " << t.path << endl;
+		if (!(i % 10)) {
+		}
 	}
 	cout << endl << "Defalt browser: " << PROGRAM::defaltBrowser << endl;
 }
@@ -281,6 +283,10 @@ void PROGRAM::quit(void) {
 }
 
 void PROGRAM::search_link(string s) {
+	if (s == "") {
+		cout << "Search Key: ";
+		cin >> s;
+	}
 	priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>> >aboutLink;
 	for (int i = 0; i < (int) PROGRAM::link.size(); i++) {
 		Link t = PROGRAM::link.at(i);
