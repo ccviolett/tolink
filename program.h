@@ -139,7 +139,15 @@ void PROGRAM::read_config() {
 		fin >> s, t.path = s;
 		if (t.name == "[Defalt" && t.path == "Browser]") break;
 		if (!SERVICE::check_address(t.path)) {
-			cout << "----" << "Wronging: Some config files has been changed artificial." << endl << "You'd better have a check." << "----" << endl;
+			cout << 
+"---------------------------------------" << endl << 
+"|                                     |" << endl << 
+"|               WARNING               |" << endl << 
+"|                                     |" << endl << 
+"| Config file was changed artificial. |" << endl << 
+"|     You'd better have a check.      |" << endl << 
+"|                                     |" << endl << 
+"---------------------------------------" << endl << endl;
 			continue;
 		}
 		PROGRAM::link.push_back(t);
