@@ -42,6 +42,10 @@ int main(int argc, char* argv[]) {
 	} else if (parameter == "-u" || parameter == "--uninstall") {
 		if (argc == 2) SERVICE::uninstall();
 		else PROGRAM::show_wrong(1);
+	} else if (parameter == "-s" || parameter == "--search") {
+		if (argc == 2) PROGRAM::search_link("");
+		else if (argc == 3) PROGRAM::search_link(SERVICE::to_string(argv[2]));
+		else PROGRAM::show_wrong(1);
 	} else {
 		if (argv[1][0] == '-') PROGRAM::show_wrong(3);
 		if (argc != 2) PROGRAM::show_wrong(1);

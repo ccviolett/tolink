@@ -5,8 +5,6 @@
 
 using namespace std;
 
-#define rep(i, a, b) for (int i = (int)a; i <= (int)b; i++)
-
 namespace PROGRAM {
 	string configFile; // The path of config file.
 	vector<Link>link; // All the link
@@ -18,7 +16,8 @@ namespace PROGRAM {
 	void welcome(void); // A welcome guide for the first time.
 	void add_link(Link); // Add the designated link.
 	void list_link(); // List all the added link.
-	void del_link(string); // Delete the designated path.
+	void search_link(string); // Search the related link.
+	void del_link(string); // Delete the designated link.
 	void open_web(string); // Open the designated web address in browser
 	void change_browser(string); // Change the defalt browser
 	void change_name(int, string); // Change the link's name
@@ -69,6 +68,8 @@ void PROGRAM::show_help(void) {
 		"      --install" << endl <<
 		"  -l                      List the all the address with its ID and name" << endl <<
 		"      --list" << endl << 
+		"  -s                      Search the related saved link" << endl << 
+		"      --search" << endl << 
 		"  -u                      Uninstall 'tolink' from the computer" << endl <<
 		"      --uninstall" << endl << endl <<
 		"Report bugs to email: admin@samcompu.com" << endl;
@@ -104,7 +105,7 @@ void PROGRAM::write_config(void) {
 	ofstream fout(PROGRAM::configFile);
 	if (!fout) PROGRAM::show_wrong(2);
 	fout << "[Links]" << endl;
-	rep(i, 0, PROGRAM::link.size() - 1) {
+	for (int i = 0; i < (int) PROGRAM::link.size(); i++) {
 		Link t = PROGRAM::link.at(i);
 		if (t.deleted) continue;
 		fout << t.name << " " << t.path << endl;
@@ -125,8 +126,7 @@ void PROGRAM::add_link(Link t) {
 		cin >> t.path;
 	}
 	if (!SERVICE::check_address(t.path)) PROGRAM::show_wrong(4);
-	PROGRAM::link.push_back(t); 
-}
+	PROGRAM::link.push_back(t); }
 
 void PROGRAM::read_config() {
 	ifstream fin(PROGRAM::configFile);
@@ -162,7 +162,7 @@ void PROGRAM::list_link() {
 		return ;
 	}
 	cout << "Link list:" << endl;
-	rep(i, 0, PROGRAM::link.size() - 1) {
+	for (int i = 0; i < (int) PROGRAM::link.size(); i++) {
 		Link t = PROGRAM::link.at(i);
 		cout << "  " << i << "  " << t.name << "  " << t.path << endl;
 	}
@@ -183,7 +183,7 @@ void PROGRAM::del_link(string s) {
 
 int PROGRAM::get_id(string s) {
 	bool isID = true;
-	rep(i, 0, s.size() - 1) {
+	for (int i = 0; i < (int) s.size(); i++) {
 		if (s.at(i) < '0' || s.at(i) > '9') isID = false;
 	}
 	int res = 0;
@@ -192,7 +192,7 @@ int PROGRAM::get_id(string s) {
 		if (res >= (int) PROGRAM::link.size()) PROGRAM::show_wrong(5);
 	} else {
 		int bestMatch = INF;
-		rep(i, 0, PROGRAM::link.size() - 1) {
+		for (int i = 0; i < (int) PROGRAM::link.size(); i++) {
 			Link t = PROGRAM::link.at(i);
 			if (SERVICE::edit_distance(s, t.name) == (int) max(s.size(), t.name.size())) continue;
 			int tMatch = SERVICE::common_distance(s, t.name);
@@ -216,7 +216,7 @@ void PROGRAM::change_browser(string s) {
 }
 
 int PROGRAM::find_link(string s) {
-	rep(i, 0, PROGRAM::link.size() - 1) {
+	for (int i = 0; i < (int) PROGRAM::link.size(); i++) {
 		Link t = PROGRAM::link.at(i);
 		if (t.path == s) return i;
 	}
@@ -261,10 +261,10 @@ void PROGRAM::change_name(int id, string s) {
 }
 
 void PROGRAM::check_name(string s) {
-	rep(i, 0, s.size() - 1) {
+	for (int i = 0; i < (int) s.size(); i++) {
 		if (!isalpha(s.at(i))) PROGRAM::show_wrong(7);
 	}
-	rep(i, 0, PROGRAM::link.size() - 1) {
+	for (int i = 0; i < (int) PROGRAM::link.size(); i++) {
 		Link t = PROGRAM::link.at(i);
 		if (t.name == s) PROGRAM::show_wrong(6);
 	}
@@ -278,5 +278,31 @@ void PROGRAM::show_wrong(int code) {
 void PROGRAM::quit(void) {
 	PROGRAM::write_config();
 	exit(0);
+}
+
+void PROGRAM::search_link(string s) {
+	priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>> >aboutLink;
+	for (int i = 0; i < (int) PROGRAM::link.size(); i++) {
+		Link t = PROGRAM::link.at(i);
+		if (SERVICE::edit_distance(s, t.name) == (int)max(s.size(), t.name.size())) continue;
+		aboutLink.push(make_pair(SERVICE::common_distance(s, t.name), i));
+	}
+	cout << "Search result:" << endl;
+	int resultNum = 0;
+	while (!aboutLink.empty()) {
+		pair<int, int> f = aboutLink.top();
+		aboutLink.pop();
+		Link t = PROGRAM::link.at(f.second);
+		cout << "  " << f.second << "  ", SERVICE::match_print(t.name, s), cout << " " << t.path << endl;
+		resultNum++;
+		if (resultNum == 10) {
+			string c;
+			cout << "Continue? (y/n) ";
+			cin >> c;
+			if (c != "y" && c != "Y") break;
+			cout << "\033[1A"; // Move the mouse to the begining of line.
+			resultNum = 0;
+		}
+	}
 }
 /* }}} */
