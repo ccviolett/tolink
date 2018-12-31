@@ -3,12 +3,16 @@
 
 using namespace std;
 
+#define RESET "\033[0m" 
+#define BOLDRED "\033[1m\033[31m" /* Bold Red */ 
+
 namespace SERVICE {
 	string HOME; // The path of home dir.
 	void init(void); // Get the HOME path.
 	void bash_run(string); // Give a command and run in bash.
 	void install(); // Install the application into the computer
 	void uninstall(); // Uninstall the application from the computer
+	void match_print(string, string); //Print the string with match.
 	bool check_path(string); // Check if there is the designated path.
 	bool check_address(string); // Check if it is a legal website address.
 	int edit_distance(string, string); // The edit distance between two string.
@@ -82,5 +86,20 @@ int SERVICE::common_distance(string a, string b) {
 		lastPos = tPos;
 	}
 	return res;
+}
+
+void SERVICE::match_print(string s, string match) {
+	int t = 0;
+	for (int i = 0; i < (int) s.size(); i++) {
+		int bak = t;
+		while (t < (int) match.size() && match.at(t) != s.at(i)) t++;
+		if (t == (int) match.size()) {
+			cout << s.at(i);
+			t = bak;
+		} else {
+			cout << BOLDRED << s.at(i) << RESET;
+			t++;
+		}
+	}
 }
 /* }}} */
