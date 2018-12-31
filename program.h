@@ -194,8 +194,8 @@ int PROGRAM::get_id(string s) {
 		int bestMatch = INF;
 		rep(i, 0, PROGRAM::link.size() - 1) {
 			Link t = PROGRAM::link.at(i);
-			int tMatch = SERVICE::edit_distance(s, t.name);
-			if (tMatch == (int) t.name.size()) continue;
+			if (SERVICE::edit_distance(s, t.name) == (int) max(s.size(), t.name.size())) continue;
+			int tMatch = SERVICE::common_distance(s, t.name);
 			if (tMatch < bestMatch) bestMatch = tMatch, res = i;
 		}
 		if (bestMatch == INF) PROGRAM::show_wrong(5);
@@ -272,7 +272,6 @@ void PROGRAM::check_name(string s) {
 
 void PROGRAM::show_wrong(int code) { 
 	cout << Error[code] << endl;
-	/* cout << "Something went wrong!" << endl << "Error code: " << code << endl << "You can use '-h' to know why." << endl; */ 
 	quit();
 }
 
