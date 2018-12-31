@@ -163,6 +163,12 @@ void PROGRAM::list_link() {
 	}
 	cout << "Link list:" << endl;
 	for (int i = 0; i < (int) PROGRAM::link.size(); i++) {
+		if (i && !(i % 10)) {
+			cout << "Continue? ([y]/n) ";
+			char c = SERVICE::read_single_char();
+			if (c && c != 'y' && c != 'Y') break;
+			cout << "\033[1A"; // Move the mouse to the begining of line.
+		}
 		Link t = PROGRAM::link.at(i);
 		cout << "  " << i << "  " << t.name << "  " << t.path << endl;
 	}
@@ -281,6 +287,10 @@ void PROGRAM::quit(void) {
 }
 
 void PROGRAM::search_link(string s) {
+	if (s == "") {
+		cout << "Search Key: ";
+		cin >> s;
+	}
 	priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>> >aboutLink;
 	for (int i = 0; i < (int) PROGRAM::link.size(); i++) {
 		Link t = PROGRAM::link.at(i);
