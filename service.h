@@ -83,10 +83,10 @@ int SERVICE::common_distance(string a, string b) {
 	for (int i = 0; i < (int) a.size(); i++) {
 		while (tPos < (int) b.size() && b.at(tPos) != a.at(i)) tPos++;
 		if (tPos == (int) b.size()) return res + (a.size() - i + 1) * b.size();
-		if (lastPos) res += (tPos - lastPos) * (tPos - lastPos);
-		lastPos = tPos;
+		res += (tPos - lastPos) * (tPos - lastPos);
+		lastPos = ++tPos;
 	}
-	return res;
+	return res + (b.size() - tPos) * (b.size() - tPos);
 }
 
 void SERVICE::match_print(string s, string match) {
