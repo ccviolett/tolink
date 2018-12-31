@@ -12,6 +12,7 @@ namespace SERVICE {
 	bool check_path(string); // Check if there is the designated path.
 	bool check_address(string); // Check if it is a legal website address.
 	int edit_distance(string, string); // The edit distance between two string.
+	int common_distance(string, string); // The common distance between two string.
 	string to_string(char *); // Trun char array to string
 	string expand_user(string); // Expand '~' to the home path.
 }
@@ -69,13 +70,18 @@ int SERVICE::edit_distance(string a, string b) {
 		}
 		d.push_back(t);
 	}
-	/* for (int i = 0; i < (int) d.size(); i++) { */
-	/* 	t = d.at(i); */
-	/* 	for (int j = 0; j < (int) t.size(); j++) cout << t.at(j) << " "; */
-	/* 	cout << endl; */
-	/* } */
-	/* cout << a << " " << b << endl; */
-	/* cout << d.at(a.size()).at(b.size()) << endl; */
 	return d.at(a.size()).at(b.size());
+}
+
+int SERVICE::common_distance(string a, string b) {
+	int lastPos = 0, tPos = 0, res = 0;
+	a.push_back('#'), b.push_back('#');
+	for (int i = 0; i < (int) a.size(); i++) {
+		while (tPos < (int) b.size() && b.at(tPos) != a.at(i)) tPos++;
+		if (tPos == (int) b.size()) return res + (a.size() - i + 1) * b.size();
+		res += (tPos - lastPos) * (tPos - lastPos);
+		lastPos = tPos;
+	}
+	return res;
 }
 /* }}} */
