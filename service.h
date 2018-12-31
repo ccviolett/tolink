@@ -15,6 +15,7 @@ namespace SERVICE {
 	void match_print(string, string); //Print the string with match.
 	bool check_path(string); // Check if there is the designated path.
 	bool check_address(string); // Check if it is a legal website address.
+	char read_single_char(); // Read the character include '\n' (return 0)
 	int edit_distance(string, string); // The edit distance between two string.
 	int common_distance(string, string); // The common distance between two string.
 	string to_string(char *); // Trun char array to string
@@ -101,5 +102,12 @@ void SERVICE::match_print(string s, string match) {
 			t++;
 		}
 	}
+}
+
+char SERVICE::read_single_char() {
+	char c = getchar();
+	if (c == '\n') return 0;
+	while (getchar() != '\n'); 
+	return c;
 }
 /* }}} */
