@@ -219,7 +219,7 @@ int PROGRAM::get_id(string s) {
 }
 
 void PROGRAM::open_web(string s) {
-	SERVICE::bash_run(PROGRAM::defaltBrowser + " " + s);
+	SERVICE::bash_run(PROGRAM::defaltBrowser + " \"" + s + "\"");
 }
 
 void PROGRAM::change_browser(string s) {
