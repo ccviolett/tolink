@@ -86,7 +86,7 @@ int SERVICE::common_distance(string a, string b) {
 		res += (tPos - lastPos) * (tPos - lastPos);
 		lastPos = ++tPos;
 	}
-	return res + (b.size() - tPos) * (b.size() - tPos);
+	return res + (b.size() - tPos);
 }
 
 void SERVICE::match_print(string s, string match) {
