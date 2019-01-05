@@ -46,7 +46,7 @@ string SERVICE::to_string(char *c) {
 }
 
 int SERVICE::edit_distance(string a, string b) {
-	vector<vector<int>>d;
+	vector<vector<int> >d;
 	vector<int>t;
 	t.push_back(0);
 	for (int i = 0; i < (int) b.size(); i++) t.push_back(i + 1);

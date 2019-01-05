@@ -83,7 +83,7 @@ void PROGRAM::welcome(void) {
 }
 
 void PROGRAM::write_config(void) {
-	ofstream fout(PROGRAM::configFile);
+	ofstream fout(PROGRAM::configFile.data());
 	if (!fout) PROGRAM::show_wrong(2);
 	fout << "[Links]" << endl;
 	for (int i = 0; i < (int) PROGRAM::link.size(); i++) {
@@ -112,7 +112,7 @@ void PROGRAM::add_link(Link t) {
 	PROGRAM::link.push_back(t); }
 
 void PROGRAM::read_config() {
-	ifstream fin(PROGRAM::configFile);
+	ifstream fin(PROGRAM::configFile.data());
 	string s;
 	fin >> s;
 	while (1) {
@@ -180,7 +180,7 @@ int PROGRAM::get_id(string s) {
 	}
 	int res = 0;
 	if (isID) {
-		res = stoi(s);
+		for (int i = (int) s.size() - 1; i >= 0; i--) res = res * 10 + s.at(i) - '0';
 		if (res >= (int) PROGRAM::link.size()) PROGRAM::show_wrong(5);
 	} else {
 		int bestMatch = INF;
@@ -281,7 +281,7 @@ void PROGRAM::search_link(string s) {
 		cin >> s;
 		cin.ignore();
 	}
-	priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>> >aboutLink;
+	priority_queue<pair<int, int>, vector<pair<int, int> >, greater<pair<int, int> > >aboutLink;
 	for (int i = 0; i < (int) PROGRAM::link.size(); i++) {
 		Link t = PROGRAM::link.at(i);
 		if (SERVICE::edit_distance(s, t.name) == (int)max(s.size(), t.name.size())) continue;
