@@ -28,6 +28,9 @@ namespace PROGRAM {
 	int get_id(string); // Find the link by the string
 	int find_link(string); // Check if the link is exist and return its ID.
 	void quit(void); // Quit the application with some necessary operating.
+	void install(); // Install the application into the computer
+	void uninstall(); // Uninstall the application from the computer
+	void update(); // Update the application to the latest version
 }
 
 /* Functions {{{ */
@@ -43,36 +46,7 @@ void PROGRAM::init(void) {
 }
 
 void PROGRAM::show_help(void) {
-	cout << 
-		"'tolink' can open the designated or saved link in the browser." << endl << endl <<
-		"Usage: " << endl << 
-		"  to/tolink [parameter]      Open the link" << endl <<
-		"  to/tolink [options]        Change or show the saved information" << endl <<  endl <<
-		"Parameter: " << endl << 
-		"  <path>                  The full website link." << endl <<
-		"  <name>                  A string with only alaphabet." << endl << 
-		"  <browser>               The command to start the browser." << endl << 
-		"  <ID>                    The id for the saved link." << endl << endl <<
-		"Options: " << endl << 
-		"  -a, -a <name> <path>    Add new address with the unique name" << endl <<
-		"      --add" << endl <<
-		"  -c, -c <name> <name>    Change the name of link" << endl << 
-		"      --change" << endl << 
-		"  -cb,-cb <browser>       Change the defalt browser" << endl << 
-		"      --changebrowser" << endl << 
-		"  -d, -d <ID>/<name>      Delete the address by its ID and name" << endl << 
-		"      --delete" << endl <<
-		"  -h                      Show help" << endl <<
-		"      --help" << endl << 
-		"  -i                      Install 'tolink' into the computer" << endl <<
-		"      --install" << endl <<
-		"  -l                      List the all the address with its ID and name" << endl <<
-		"      --list" << endl << 
-		"  -s                      Search the related saved link" << endl << 
-		"      --search" << endl << 
-		"  -u                      Uninstall 'tolink' from the computer" << endl <<
-		"      --uninstall" << endl << endl <<
-		"Report bugs to email: admin@samcompu.com" << endl;
+	SERVICE::bash_run("cat /usr/share/tolink/doc/help");
 }
 
 bool PROGRAM::start_test(void) {
@@ -87,6 +61,9 @@ bool PROGRAM::start_test(void) {
 void PROGRAM::welcome(void) {
 	string c = "n";
 	cout << "Welcome to use 'tolink'!" << endl << "This is the first time you run this application!" << endl;
+	/* while (c == "n") { */
+	/* 	cout << "Where do you want to save your config file? [~/.config/tolink/init.cfg] " << endl; */
+	/* } */
 	while (c == "n") {
 		cout << "Please set your defult browser first: ";
 		cin >> PROGRAM::defaltBrowser;
@@ -326,5 +303,17 @@ void PROGRAM::search_link(string s) {
 			resultNum = 0;
 		}
 	}
+}
+
+void PROGRAM::install() {
+	SERVICE::bash_run("/usr/share/tolink/src/install.sh");
+}
+
+void PROGRAM::uninstall() {
+	SERVICE::bash_run("/usr/share/tolink/src/uninstall.sh");
+}
+
+void PROGRAM::update() {
+	SERVICE::bash_run("/usr/share/tolink/src/update.sh");
 }
 /* }}} */
