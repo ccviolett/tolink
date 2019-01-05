@@ -305,15 +305,17 @@ void PROGRAM::search_link(string s) {
 	}
 }
 
-void PROGRAM::install() {
-	SERVICE::bash_run("/usr/share/tolink/src/install.sh");
+void PROGRAM::uninstall() {
+	if (SERVICE::check_path("./src/uninstall.sh")) SERVICE::bash_run("./src/uninstall.sh");
+	else SERVICE::bash_run("/usr/share/tolink/src/uninstall.sh");
 }
 
-void PROGRAM::uninstall() {
-	SERVICE::bash_run("/usr/share/tolink/src/uninstall.sh");
+void PROGRAM::install() {
+	SERVICE::bash_run("./src/install.sh");
 }
 
 void PROGRAM::update() {
-	SERVICE::bash_run("/usr/share/tolink/src/update.sh");
+	if (SERVICE::check_path("./src/update.sh")) SERVICE::bash_run("./src/update.sh");
+	else SERVICE::bash_run("/usr/share/tolink/src/update.sh");
 }
 /* }}} */
