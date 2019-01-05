@@ -3,15 +3,19 @@
 
 using namespace std;
 
+#define RESET "\033[0m" 
+#define BOLDRED "\033[1m\033[31m" /* Bold Red */ 
+
 namespace SERVICE {
 	string HOME; // The path of home dir.
 	void init(void); // Get the HOME path.
 	void bash_run(string); // Give a command and run in bash.
-	void install(); // Install the application into the computer
-	void uninstall(); // Uninstall the application from the computer
+	void match_print(string, string); //Print the string with match.
 	bool check_path(string); // Check if there is the designated path.
 	bool check_address(string); // Check if it is a legal website address.
-	int common_substring(string, string); // Find the len of longest common substring
+	char read_single_char(); // Read the character include '\n' (return 0)
+	int edit_distance(string, string); // The edit distance between two string.
+	int common_distance(string, string); // The common distance between two string.
 	string to_string(char *); // Trun char array to string
 	string expand_user(string); // Expand '~' to the home path.
 }
@@ -41,32 +45,53 @@ string SERVICE::to_string(char *c) {
 	return s;
 }
 
-void SERVICE::install() {
-	SERVICE::bash_run("sudo cp tolink /usr/bin");
-	string c;
-	cout << "Do you want to alias 'tolink' to 'to'? (y/n) ";
-	cin >> c;
-	if (c != "y" || c != "Y") return ;
-	if (SERVICE::check_path("~/.zshrc"))
-		SERVICE::bash_run("echo 'alias to=\"tolink\"' >> ~/.zshrc");
-	if (SERVICE::check_path("~/.bashrc"))
-		SERVICE::bash_run("echo 'alias to=\"tolink\"' >> ~/.bashrc");
+int SERVICE::edit_distance(string a, string b) {
+	vector<vector<int>>d;
+	vector<int>t;
+	t.push_back(0);
+	for (int i = 0; i < (int) b.size(); i++) t.push_back(i + 1);
+	d.push_back(t);
+	for (int i = 0; i < (int) a.size(); i++) {
+		t.clear(); t.push_back(i + 1);
+		for (int j = 0; j < (int) b.size(); j++) {
+			if (a.at(i) == b.at(j)) t.push_back(d.at(i).at(j));
+			else t.push_back(min(min(d.at(i).at(j + 1), t.back()), d.at(i).at(j)) + 1);
+		}
+		d.push_back(t);
+	}
+	return d.at(a.size()).at(b.size());
 }
 
-void SERVICE::uninstall() {
-	SERVICE::bash_run("sudo rm /usr/bin/tolink");
+int SERVICE::common_distance(string a, string b) {
+	int lastPos = 0, tPos = 0, res = 0;
+	for (int i = 0; i < (int) a.size(); i++) {
+		while (tPos < (int) b.size() && b.at(tPos) != a.at(i)) tPos++;
+		if (tPos == (int) b.size()) return res + (a.size() - i + 1) * b.size();
+		res += (tPos - lastPos) * (tPos - lastPos);
+		lastPos = ++tPos;
+	}
+	return res + (b.size() - tPos);
 }
 
-int SERVICE::common_substring(string a, string b) {
-	a.push_back('#'), b.push_back('#');
-	int res = 0, t = 0, last = 0;
-	for (int i = 0; i < (int) b.size(); i++) {
-		if (a.at(t) == b.at(i)) {
-			res -= i - last;
-			last = i;
+void SERVICE::match_print(string s, string match) {
+	int t = 0;
+	for (int i = 0; i < (int) s.size(); i++) {
+		int bak = t;
+		while (t < (int) match.size() && match.at(t) != s.at(i)) t++;
+		if (t == (int) match.size()) {
+			cout << s.at(i);
+			t = bak;
+		} else {
+			cout << BOLDRED << s.at(i) << RESET;
 			t++;
 		}
 	}
-	return res + t * b.size();
+}
+
+char SERVICE::read_single_char() {
+	char c = getchar();
+	if (c == '\n') return 0;
+	while (getchar() != '\n'); 
+	return c;
 }
 /* }}} */

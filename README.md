@@ -35,4 +35,4 @@ You can use the parameter `--help` or `-h` to know the information about 'tolink
 
 Samcompu
 
-This is `README.md` for version 1.0 of tolink.
+This is `README.md` for version 1.1 of tolink.
