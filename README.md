@@ -13,13 +13,24 @@ cd ./tolink/
 make
 ```
 
-## Installation
+## Install
 
 You need to compile the source first.
 
 ```
 ./tolink --install
-./tolink -i
+```
+
+## Uninstall
+
+```
+./tolink --uninstall
+```
+
+## Update
+
+```
+./tolink --update
 ```
 
 ## Documentation
@@ -35,4 +46,4 @@ You can use the parameter `--help` or `-h` to know the information about 'tolink
 
 Samcompu
 
-This is `README.md` for version 1.1 of tolink.
+This is `README.md` for version 1.2 of tolink.
