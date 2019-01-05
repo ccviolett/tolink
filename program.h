@@ -46,7 +46,8 @@ void PROGRAM::init(void) {
 }
 
 void PROGRAM::show_help(void) {
-	SERVICE::bash_run("cat /usr/share/tolink/doc/help");
+	if (SERVICE::check_path("./doc/help")) SERVICE::bash_run("cat ./doc/help");
+	else SERVICE::bash_run("cat /usr/share/tolink/doc/help");
 }
 
 bool PROGRAM::start_test(void) {
