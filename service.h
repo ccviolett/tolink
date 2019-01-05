@@ -10,8 +10,6 @@ namespace SERVICE {
 	string HOME; // The path of home dir.
 	void init(void); // Get the HOME path.
 	void bash_run(string); // Give a command and run in bash.
-	void install(); // Install the application into the computer
-	void uninstall(); // Uninstall the application from the computer
 	void match_print(string, string); //Print the string with match.
 	bool check_path(string); // Check if there is the designated path.
 	bool check_address(string); // Check if it is a legal website address.
@@ -45,20 +43,6 @@ void SERVICE::bash_run(string s) { system(s.data()); }
 string SERVICE::to_string(char *c) {
 	string s = c;
 	return s;
-}
-
-void SERVICE::install() {
-	SERVICE::bash_run("sudo cp ./tolink /usr/bin");
-	string c;
-	cout << "Do you want to alias 'tolink' to 'to'? (y/n) ";
-	cin >> c;
-	if (c != "y" && c != "Y") return ;
-	SERVICE::bash_run("sudo cp ./tolink /usr/bin/to");
-}
-
-void SERVICE::uninstall() {
-	SERVICE::bash_run("sudo rm /usr/bin/tolink");
-	SERVICE::bash_run("sudo rm /usr/bin/to");
 }
 
 int SERVICE::edit_distance(string a, string b) {

@@ -1,0 +1,28 @@
+'tolink' can open the designated or saved link in the browser.
+
+Usage:
+  to/tolink [parameter]      Open the link
+  to/tolink [options]        Change or show the saved information
+	
+Parameter:
+  <path>                  The full website link.
+  <name>                  A string with only alaphabet.
+  <browser>               The command to start the browser.
+  <ID>                    The id for the saved link.
+
+Options:
+  -a, -a <name> <path>    Add new address with the unique name
+      --add
+  -c, -c <name> <name>    Change the name of link
+      --change
+  -d, -d <ID>/<name>      Delete the address by its ID and name
+      --delete
+  -h, --help              Show help
+  -l, --list              List the all the address with its ID and name
+  -s, --search            Search the related saved link
+	--changebrowser         Change the defalt browser
+  --install               Install 'tolink' into the computer
+  --uninstall             Uninstall 'tolink' from the computer
+  --update                Update 'tolink' to the latest version
+
+Report bugs to email: admin@samcompu.com
