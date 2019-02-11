@@ -147,13 +147,6 @@ void PROGRAM::list_link() {
 	}
 	cout << "Link list:" << endl;
 	for (int i = 0; i < (int) PROGRAM::link.size(); i++) {
-		if (i && !(i % 10)) {
-			cout << "Continue? ([y]/n) ";
-			char c = SERVICE::read_single_char();
-			if (c != 'n' && c != 'N') cout << "\033[1A"; 
-			// Move the mouse to the begining of line.
-			else break;
-		}
 		Link t = PROGRAM::link.at(i);
 		cout << "  " << i << "  " << t.name << "  " << t.path << endl;
 	}
